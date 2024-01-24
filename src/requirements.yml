@@ -1,0 +1,15 @@
+name: miht
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.9
+  - numpy=1.23
+  - scipy=1.8
+  - pandas=2.1
+  - sktime
+  - matplotlib
+  - h5py
+  - ipython
+  - pip
+  - pip:
+    - river>=0.21

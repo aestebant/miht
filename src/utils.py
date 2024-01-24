@@ -3,7 +3,7 @@ def ordinal_targets(dataset, y) -> list:
     Parameters
     ----------
     dataset
-        String with the name of the repository as it appears in http://www.timeseriesclassification.com/dataset.php
+        String with the name of the dataset as it appears in http://www.timeseriesclassification.com/dataset.php
     y
         The array with the original targets
     Return

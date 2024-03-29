@@ -7,7 +7,7 @@ Bellow it is shown the size of the base tree generated for MIHT for each of the 
 | ArrowHead                    | 8      | 39      | 19         | 20       |
 | UnitTest                     | 4      | 9       | 4          | 5        |
 | ArticularyWordRecognition    | 6      | 21      | 10         | 11       |
-| AtrialFibrillation           | 13     | 143     | 71         | 72       |
+| AtrialFibrillation           | 8      | 31      | 15         | 16       |
 | BasicMotions                 | 4      | 11      | 5          | 6        |
 | Cricket                      | 14     | 197     | 98         | 99       |
 | DuckDuckGeese                | 11     | 107     | 53         | 54       |

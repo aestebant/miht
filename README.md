@@ -63,15 +63,55 @@ MIHT's performance has been validated on a large selection of time-series classi
 
 ## Results
 
-The complete results of the experimentation carried out in this work and presented and discussed in the associated paper are available in CSV format for download in the [results folder](results/) attending to the metrics:
+The average results across in test for all the studied metrics are:
 
-| Metric | File |
-|---|---|
-|Accuracy in train | [acc_train.csv](results/acc_train.csv) |
-|Accuracy in test | [acc_test.csv](results/acc_test.csv) |
-|Execution time (seconds) in train | [exec_time_s_train.csv](results/exec_time_s_train.csv) |
-|Execution time (seconds) in test | [exec_time_s_test.csv](results/exec_time_s_test.csv) |
-|Size of the generated model (MB) | [memory_mb.csv](results/memory_mb.csv) |
+| Model             | Accuracy | Balanced Acc | Micro F1-score | Macro F1-score | Hamming loss | Execution time (s) | Model size (MB) |
+|-------------------|----------|--------------|----------------|----------------|--------------|------------------:|------------------:|
+| DrCIF             | 0.514    | 0.513        | 0.514          | 0.509          | 0.486                 | **12.635**             | **0.023**           |
+| ShapeletTransform | 0.506    | 0.503        | 0.506          | 0.501          | 0.494                     | 8890.524           | 5.940           |
+| MUSE              | 0.578    | 0.569        | 0.578          | 0.563          | 0.422                      | 1123.451           | 107.779         |
+| SVM-Liner         | 0.408    | 0.399        | 0.408          | 0.351          | 0.592                  | 9286.714           | 43.709          |
+| SVM-RBF           | 0.487    | 0.478        | 0.487          | 0.419          | 0.513                     | 20224.181          | 43.708          |
+| Rocket            | 0.602    | 0.595        | 0.602          | **0.591**          | 0.398                    | 912.619            | 2.524           |
+| HIVECOTEV2        | 0.473    | 0.464        | 0.473          | 0.453          | 0.527               | 8446.169           | 31.316          |
+| KNN-ED            | 0.567    | 0.557        | 0.567          | 0.538          | 0.433                 | 13909.038          | 258.307         |
+| KNN-DTW           | 0.371    | 0.362        | 0.371          | 0.364          | 0.629                   | 12511.160          | 54.649          |
+| TapNet            | 0.556    | 0.548        | 0.556          | 0.521          | 0.444                  | 6594.003           | 2.580           |
+| InceptionTime     | 0.585    | 0.583        | 0.585          | 0.573          | 0.415               | 962.320            | 1.623           |
+| MIHT              | **0.636**    | **0.621**        | **0.636**          | 0.589          | **0.364**                   | 1508.548           | 92.304          |
+
+In particular, the main metric studied, the accuracy obtained in test, is the following:
+
+| Dataset                      | DrCIF | ST    | MUSE  | SVM-Linear | SVM-RBF | ROCKET | HIVECOTE2 | kNN-ED | kNN-DTW | TapNet | InceptionTime    | MIHT  |
+|------------------------------|------:|------:|------:|-----------:|--------:|-------:|----------:|-------:|--------:|-------:|------:|------:|
+| ArrowHead                    | 0.554 | 0.697 | **0.846** | 0.337      | 0.503   | 0.811  | -       | 0.800  | 0.703   | 0.480  | 0.703 | 0.589 |
+| UnitTest                     | 0.909 | 0.818 | 0.773 | 0.227      | 0.682   | 0.909  | -       | 0.864  | **0.955**   | **0.955**  | 0.909 | 0.818 |
+| ArticularyWordRecognition    | 0.693 | 0.850 | **0.993** | 0.053      | 0.813   | **0.993**  | **0.993**     | 0.970  | 0.987   | 0.900  | 0.990 | 0.933 |
+| AtrialFibrillation           | **0.400** | 0.333 | 0.200 | 0.333      | 0.267   | 0.067  | 0.133     | 0.267  | 0.200   | 0.333  | 0.267 | **0.400** |
+| BasicMotions                 | 0.950 | **1.000** | **1.000** | **1.000**      | 0.750   | **1.000**  | **1.000**     | 0.600  | 0.975   | 0.975  | **1.000** | **1.000** |
+| Cricket                      | 0.847 | 0.903 | **1.000** | 0.167      | 0.917   | **1.000**  | **1.000**     | 0.944  | **1.000**   | 0.944  | 0.986 | 0.972 |
+| DuckDuckGeese                | 0.300 | 0.360 | 0.460 | 0.540      | 0.260   | 0.500  | 0.300     | 0.500  | 0.580   | 0.480  | **0.640** | 0.620 |
+| EigenWorms                   | 0.817 | 0.702 | **0.939** | 0.275      | 0.420   | 0.893  | 0.901     | 0.496  | 0.618   | -    | 0.809 | 0.779 |
+| FingerMovements              | 0.390 | 0.620 | 0.560 | 0.560      | 0.490   | 0.540  | 0.490     | 0.550  | 0.530   | 0.530  | 0.530 | **0.630** |
+| Heartbeat                    | 0.688 | 0.624 | 0.741 | 0.712      | 0.517   | **0.746**  | 0.707     | 0.620  | 0.717   | 0.717  | 0.702 | 0.722 |
+| MotorImagery                 | 0.510 | **0.570** | 0.500 | 0.500      | 0.500   | 0.520  | 0.550     | 0.490  | 0.500   | 0.490  | 0.510 | 0.550 |
+| SelfRegulationSCP1           | **0.826** | 0.720 | 0.792 | 0.457      | 0.502   | 0.846  | 0.840     | 0.778  | 0.775   | **0.826**  | -   | 0.805 |
+| SelfRegulationSCP2           | 0.533 | 0.522 | **0.583** | 0.522      | 0.494   | 0.528  | 0.522     | 0.483  | 0.539   | 0.500  | 0.517 | 0.578 |
+| StandWalkJump                | **0.600** | 0.333 | 0.400 | 0.467      | 0.200   | 0.467  | 0.267     | 0.200  | 0.200   | 0.133  | 0.333 | 0.533 |
+| AsphaltRegularity            | 0.848 | 0.795 | 0.732 | 0.482      | 0.799   | 0.748  | 0.858     | 0.566  | -     | 0.877  | **0.940** | 0.885 |
+| AllGestureWiimoteX           | 0.156 | 0.110 | 0.126 | 0.130      | 0.271   | 0.137  | 0.114     | **0.629**  | -     | 0.199  | 0.176 | 0.290 |
+| AllGestureWiimoteY           | 0.204 | 0.113 | 0.150 | 0.170      | 0.243   | 0.236  | 0.164     | **0.651**  | -     | 0.264  | 0.229 | 0.277 |
+| AllGestureWiimoteZ           | 0.166 | 0.169 | 0.240 | 0.167      | 0.237   | 0.259  | 0.259     | **0.611**  | -     | 0.283  | 0.361 | 0.266 |
+| GesturePebbleZ2              | 0.234 | 0.323 | 0.367 | 0.399      | 0.310   | 0.348  | 0.361     | **0.658**  | -     | 0.266  | 0.386 | 0.525 |
+| PickupGestureWiimoteZ        | 0.280 | 0.160 | 0.400 | 0.360      | 0.420   | 0.320  | 0.440     | 0.600  | **0.700**     | 0.400  | 0.460 | 0.420 |
+| AsphaltObstaclesCoordinates  | 0.427 | 0.432 | 0.509 | 0.271      | 0.427   | **0.601**  | 0.560     | 0.340  | -     | 0.563  | 0.565 | 0.430 |
+| AsphaltRegularityCoordinates | 0.867 | 0.819 | 0.885 | 0.507      | 0.698   | 0.876  | 0.895     | 0.555  | -     | 0.925  | **0.952** | 0.912 |
+| InsectWingbeat               | -   | -   | 0.222 | 0.126      | 0.113   | 0.187  | -       | 0.165  | -     | 0.267  | -   | **0.337** |
+| JapaneseVowels               | 0.651 | 0.432 | 0.435 | 0.957      | **0.968**   | 0.873  | 0.465     | 0.343  | 0.949     | 0.922  | **0.968** | 0.951 |
+| SpokenArabicDigits           | -   | 0.242 | 0.608 | 0.475      | 0.387   | 0.636  | -       | 0.486  | -     | 0.662  | **0.693** | 0.680 |
+| | | | | | | | | | | | | |
+| *Average* | 0.514 | 0.506 | 0.578 | 0.408 | 0.487 | 0.602 | 0.473 | 0.567 | 0.437 | 0.556 | 0.585 | **0.636** |
+| *Friedman's rank* | 7.54 | 7.68 | 5.46 | 7.78 | 8.34 | 4.72 | 6.70 | 6.78 | 8.54 | 6.10 | 4.76 | **3.60** |
 
 Moreover, the results are summarized in the following graphs for both accuracy and time of execution (considering both train and test times in seconds). These graphs show the distribution per dataset of the tested models and at which point is our proposed MLHT.
 
@@ -99,11 +139,19 @@ if(friedman$p.value < alpha) {
 }
 ```
 
-And the critical distance plots are:
+And the critical distance plot is:
 
 ![cd for accuracy in test](results/cd_acc_test.jpg)
 
-![cd for total running time in seconds](results/cd_exec_time_s_total.jpg)
+The complete results of the experimentation carried out in this work and presented and discussed in the associated paper are available in CSV format for download in the [results folder](results/) attending to the metrics:
+
+| Metric | File |
+|---|---|
+|Accuracy in train | [acc_train.csv](results/acc_train.csv) |
+|Accuracy in test | [acc_test.csv](results/acc_test.csv) |
+|Execution time (seconds) in train | [exec_time_s_train.csv](results/exec_time_s_train.csv) |
+|Execution time (seconds) in test | [exec_time_s_test.csv](results/exec_time_s_test.csv) |
+|Size of the generated model (MB) | [memory_mb.csv](results/memory_mb.csv) |
 
 ## Reproductible experimentation
 

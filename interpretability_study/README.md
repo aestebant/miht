@@ -3,7 +3,7 @@
 Bellow it is shown the size of the base tree generated for MIHT for each of the datasets considered in the study, in term of height of the tree, number of nodes in total, and broken down by branche nodes and leaf nodes.
 
 | Dataset                      | height | # nodes | # branches | # leaves |
-|------------------------------|--------|---------|------------|----------|
+|------------------------------|-------:|--------:|-----------:|---------:|
 | ArrowHead                    | 8      | 39      | 19         | 20       |
 | UnitTest                     | 4      | 9       | 4          | 5        |
 | ArticularyWordRecognition    | 6      | 21      | 10         | 11       |

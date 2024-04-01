@@ -42,3 +42,55 @@ model.online_learner.draw()
 For example, for the dataset *AtrialFribrilation* we get the following tree. In the leaves we see the probability of each class an how many time steps were received during the training process using the iterative search based on the MIL framework. In the branchs we see the attribute and the values of it that define the split. In this specific example, the structure of the tree also shows us that the most discriminant feature is *dim_1*, since it is in the root node and is prevalent in the higher levels, while *dim_0* is used in the lower levels of the tree when the path has discriminated the data with more important conditions.
 
 ![Tree visualization](tree_atrialfribrilation.png)
+
+Finally, we can also visualize a time series and the instance that maximize the likelihood of the predicted class. Continuing with the dataset of the previous example, *AtrialFribrilation* we can visualize 3 random series of the test set, one for each class, with the section that has been highlighted as the most relevant in each case (signature).
+
+* Class *n*: the most informative window is between the time steps 340 and the 510 approx for this series.
+
+![AtrialFibrilation class n](atrialfibrilation_0.png)
+
+* Class *s*: the most informative window is between the time steps 190 and the 370 approx for this series.
+
+![AtrialFibrilation class n](atrialfibrilation_1.png)
+
+* Class *t*: the most informative window is between the time steps 340 and the 510 approx for this series.
+
+![AtrialFibrilation class n](atrialfibrilation_2.png)
+
+Other examples for other datasets are:
+
+* *BasicMotions*:
+
+|Class *standing* | Class *badminton*|
+|:---:|:---:|
+|![BasicMotions 0](basicmotions_0.png) | ![BasicMotions 3](basicmotions_3.png)|
+
+* *ArrowHead*
+
+| Class 0 | Class 1 | Class 2|
+|:---:|:---:|:---:|
+| ![ArrowHead 0](arrowhead_0.png) | ![ArrowHead 1](arrowhead_1.png) | ![ArrowHead 2](arrowhead_2.png) |
+
+* *Cricket*:
+
+|Class 4 | Class 9|
+|:---:|:---:|
+|![Cricket 4](cricket_4.png) | ![Cricket 9](cricket_9.png)|
+
+* *ArticularyWordRecognition*:
+
+|Class 0 | Class 2|
+|:---:|:---:|
+|![ArticularyWordRecognition 0](articularywordrecognition_0.png) | ![ArticularyWordRecognition 2](articularywordrecognition_2.png)|
+
+* *AsphaltRegularityCoordinates*: In this case we work with time series of different length, but the size of the signature to look for is the same.
+
+|Class *regular* | Class *deteriored*|
+|:---:|:---:|
+|![AsphaltRegularityCoordinates 0](asphaltregularitycoordinates_0.png) | ![AsphaltRegularityCoordinates 2](asphaltregularitycoordinates_1.png)|
+
+* *JapaneseVowels*: Another case of irregular-length time series.
+
+|Class 1 | Class 6|
+|:---:|:---:|
+|![JapanseVowels 1](japanasevowels_1.png) | ![JapanseVowels 6](japanasevowels_6.png)|

@@ -65,14 +65,10 @@ class MultiInstanceHoeffdingTreeClassifier():
 
         self.online_learner = copy.deepcopy(self.ref_online_learner)
 
-        X_bags = list()
+        X_bags = self._sequence2bag(X)
         # First training with all the instances
-        for i, seq in X.groupby(level=0):
-            np_seq = seq.to_numpy()
-            actual_len = min(self.inst_len, len(np_seq))
-            roll_win = sliding_window_view(np_seq, window_shape=actual_len, axis=0)[::self.inst_stride]
-            X_bags.append(roll_win)
-            for instance in roll_win:
+        for bag in X_bags:
+            for instance in bag:
                 for moment in instance.transpose():
                     moment_dict = dict(zip(X.columns, moment))
                     self.online_learner.learn_one(moment_dict, y[i])
@@ -100,10 +96,12 @@ class MultiInstanceHoeffdingTreeClassifier():
                 roll_probs = sliding_window_view(instances_prob, window_shape=actual_k)
                 max_win = np.argmax(np.sum(roll_probs, axis=1))
                 start = max_win * self.inst_stride
-                end = start + actual_len * actual_k - self.inst_stride * (actual_k - 1)
+                end = start + len(instance.transpose()) * actual_k - self.inst_stride * (actual_k - 1)
                 selection.append([max_win, actual_k, start, end])
 
             # Retraining or insisting now only with selected instances
+            if self.reset_model:
+                self.online_learner = copy.deepcopy(self.ref_online_learner)
             for i, bag in enumerate(X_bags):
                 max_win = selection[i][0]
                 actual_k = selection[i][1]
@@ -129,29 +127,6 @@ class MultiInstanceHoeffdingTreeClassifier():
         return result['acc_hist'], result['selection']
 
 
-    def _predict(self, X_columns: list, X_bags: list) -> np.ndarray:
-        """Internal operations in the prediction process.
-        """
-        y_pred = np.zeros(len(X_bags))
-        for i, bag in enumerate(X_bags):
-            bag_outputs = list()
-            # Generate labels at instance level
-            for instance in bag:
-                instance_outputs = list()
-                for moment in instance.transpose():
-                    moment_dict = dict(zip(X_columns, moment))
-                    instance_outputs.append(self.online_learner.predict_one(moment_dict))
-                bag_outputs.append(mode(instance_outputs)[0]) # Summarization of time information with mode of all instances
-            # MIL assumption to pass to bag label
-            if self.mil_assumption == 'max':
-                y_pred[i] = max(bag_outputs)
-            elif self.mil_assumption == 'mode':
-                y_pred[i] = mode(bag_outputs)[0]
-            elif self.mil_assumption == 'mean':
-                y_pred[i] = round(np.mean(bag_outputs))
-        return y_pred
-
-
     def predict(self, X: pd.MultiIndex) -> np.ndarray:
         """Predicts labels for time series in X.
 
@@ -166,12 +141,7 @@ class MultiInstanceHoeffdingTreeClassifier():
             Predicted class labels in numpy.ndarray format. Indices correspond to time series indices in X.
         """
         # Pass from time series dataset to multi-instance bags of sequences
-        X_bags = list()
-        for _, seq in X.groupby(level=0):
-            np_seq = seq.to_numpy()
-            actual_len = min(self.inst_len, len(np_seq))
-            roll_win = sliding_window_view(np_seq, window_shape=actual_len, axis=0)[::self.inst_stride]
-            X_bags.append(roll_win)
+        X_bags = self._sequence2bag(X)
         return self._predict(X.columns, X_bags)
 
 
@@ -190,12 +160,7 @@ class MultiInstanceHoeffdingTreeClassifier():
             Indices of the k best instances per bag.
         """
         # Getting y_pred
-        X_bags = list()
-        for _, seq in X.groupby(level=0):
-            np_seq = seq.to_numpy()
-            actual_len = min(self.inst_len, len(np_seq))
-            roll_win = sliding_window_view(np_seq, window_shape=actual_len, axis=0)[::self.inst_stride]
-            X_bags.append(roll_win)
+        X_bags = self._sequence2bag(X)
         y_pred = self._predict(X.columns, X_bags)
         # Selecting k consecutive best instanes per bag
         selection = list()
@@ -208,6 +173,56 @@ class MultiInstanceHoeffdingTreeClassifier():
             roll_probs = sliding_window_view(instances_prob, window_shape=actual_k)
             max_win = np.argmax(np.sum(roll_probs, axis=1))
             start = max_win * self.inst_stride
-            end = start + actual_len * actual_k - self.inst_stride * (actual_k - 1)
+            end = start + len(instance.transpose()) * actual_k - self.inst_stride * (actual_k - 1)
             selection.append([max_win, actual_k, start, end])
         return y_pred, selection
+
+
+    def predict_bestinst(self, X: pd.MultiIndex):
+        # Getting y_pred
+        X_bags = self._sequence2bag(X)
+        y_pred = self._predict(X.columns, X_bags)
+
+        # Getting the max index of the instances probabilities
+        best_inst = list()
+        for i, bag in enumerate(X_bags):
+            instances_prob = np.zeros(len(bag))
+            for j, instance in enumerate(bag):
+                for moment in instance.transpose():
+                    instances_prob[j] += self.online_learner.predict_proba_one(dict(zip(X.columns, moment)))[y_pred[i]]
+            best_inst.append((np.argmax(instances_prob), len(instance.transpose())))
+
+        return y_pred, best_inst
+
+
+    def _sequence2bag(self, X: pd.MultiIndex) -> list:
+        X_bags = list()
+        for i, seq in X.groupby(level=0):
+            np_seq = seq.to_numpy()
+            actual_len = min(self.inst_len, len(np_seq))
+            roll_win = sliding_window_view(np_seq, window_shape=actual_len, axis=0)[::self.inst_stride]
+            X_bags.append(roll_win)
+        return X_bags
+
+
+    def _predict(self, X_columns: list, X_bags: list) -> np.ndarray:
+        """Internal operations in the prediction process.
+        """
+        y_pred = np.zeros(len(X_bags))
+        for i, bag in enumerate(X_bags):
+            bag_outputs = list()
+            # Generate labels at instance level
+            for instance in bag:
+                instance_outputs = list()
+                for moment in instance.transpose():
+                    moment_dict = dict(zip(X_columns, moment))
+                    instance_outputs.append(self.online_learner.predict_one(moment_dict))
+                bag_outputs.append(mode(instance_outputs, keepdims=False)[0]) # Summarization of time information with mode of all instances
+            # MIL assumption to pass to bag label
+            if self.mil_assumption == 'max':
+                y_pred[i] = max(bag_outputs)
+            elif self.mil_assumption == 'mode':
+                y_pred[i] = mode(bag_outputs, keepdims=False)[0]
+            elif self.mil_assumption == 'mean':
+                y_pred[i] = round(np.mean(bag_outputs))
+        return y_pred

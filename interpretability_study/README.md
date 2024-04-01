@@ -94,3 +94,26 @@ Other examples for other datasets are:
 |Class 1 | Class 6|
 |:---:|:---:|
 |![JapanseVowels 1](japanasevowels_1.png) | ![JapanseVowels 6](japanasevowels_6.png)|
+
+The code to genereate these plots is the following, more details about MIHT can be found in the [Quick start notebook](../src/tutorial.ipynb).
+
+```python
+from sktime.datasets import load_UCR_UEA_dataset
+import matplotlib.pyplot as plt
+import random
+
+X_test, y_test = load_UCR_UEA_dataset(name=dataset, return_type="pd-multiindex", split="test")
+
+y_pred, best_inst = model.predict_bestinst(X_test)
+for i, seq in X_test.groupby(level=0):
+    if random.random() < 0.75:
+        continue
+    print('Sequence:', i, ', Real:', y_test[i], ', Predicted:', y_pred[i])
+    plt.figure()
+    plt.axvspan(best_inst[i][0], best_inst[i][0]+best_inst[i][1], alpha=0.4, label='Signature')
+    for c in seq.columns:
+        plt.plot([t[1] for t in seq.index], seq[c], label=c)
+        plt.legend()
+    plt.show()
+
+```

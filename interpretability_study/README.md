@@ -117,3 +117,25 @@ for i, seq in X_test.groupby(level=0):
     plt.show()
 
 ```
+
+## Case study: WebTraffic dataset
+
+The problem with the classic benchmark datasets is that they are not labeled at the time step level, they only have the general label at the series level. This makes it impossible to know for sure the location of the signature of the series, i.e. the portion of the series that discriminates between one class and another. To analyze the accuracy of MIHT in this regard, a particular case is studied for the dataset *WebTraffic* that does have this metadata publicly available. This dataset was created publicly by Early et al [1] and is available for download in [the repository associated with that work](https://github.com/JAEarly/MILTimeSeriesClassification/tree/master).
+
+This dataset has 10 classes, are univariate series of 1008 time steps and is composed of 500 series in each set of train and test. Each class has a signature that differs in size and location. In the images below we show a random series for each class of the test set, showing also its real signature and the one predicted by our MIHT model. The results show that MIHT quite accurately locates the signatures in each class. However, MIHT has the limitation of searching, for the same configuration, series of the same size, so for some classes it covers more period than the real one.
+
+| Class *none* | Class *spikes* | Class *flip* |
+|---|---|---|
+| ![](wt_none.png) | ![](wt_spikes.png) | ![](wt_flip.png) |
+
+| Class *skew* | Class *noise* | Class *cutoff* |
+|---|---|---|
+| ![](wt_skew.png) | ![](wt_noise.png) | ![](wt_cutof.png)
+
+| Class *average | Class *wander* | Class *peak* | Class *trough* |
+|---|---|---|---|
+| ![](wt_average.png) | ![](wt_wander.png) | ![](wt_peak.png) | ![](wt_trough.png)
+
+## References
+
+[1] J. Early, G. K. Cheung, K. Cutajar, H. Xie, J. Kandola, and N. Twomey, “Inherently Interpretable Time Series Classification via Multiple Instance Learning,” arXiv preprint 2311.10049, pp. 1–29, 2024.

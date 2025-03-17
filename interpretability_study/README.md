@@ -43,6 +43,8 @@ For example, for the dataset *AtrialFribrilation* we get the following tree. In 
 
 ![Tree visualization](tree_atrialfribrilation.png)
 
+The graphical representation of the trees generated during the experimentation for all the datasets are available in the subfolder [generated_trees](generated_trees).
+
 Finally, we can also visualize a time series and the instance that maximize the likelihood of the predicted class. Continuing with the dataset of the previous example, *AtrialFribrilation* we can visualize 3 random series of the test set, one for each class, with the section that has been highlighted as the most relevant in each case (signature).
 
 * Class *n*: the most informative window is between the time steps 340 and the 510 approx for this series.

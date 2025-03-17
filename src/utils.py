@@ -44,7 +44,7 @@ def ordinal_targets(dataset, y) -> list:
         converter = {'negativity': 0, 'positivity': 1}
     elif dataset == 'StandWalkJump':
         converter = {'jumping': 2, 'walking': 1, 'standing': 0}
-    elif dataset in {'AllGestureWiimoteX', 'AllGestureWiimoteY', 'AllGestureWiimoteZ', 'GestureMidAirD1', 'GestureMidAirD2', 'GestureMidAirD3', 'GesturePebbleZ1',  'GesturePebbleZ2', 'PickupGestureWiimoteZ', 'PLAID', 'ShakeGestureWiimoteZ', 'CharacterTrajectories', 'JapaneseVowels', 'SpokenArabicDigits', 'EigenWorms', 'ERing', 'FaceDetection', 'Libras', 'LSST', 'PenDigits', 'GunPoint', 'ItalyPowerDemand', 'OSULeaf', 'UnitTest'}:
+    elif dataset in {'Adiac', 'AllGestureWiimoteX', 'AllGestureWiimoteY', 'AllGestureWiimoteZ', 'Beef', 'BeetleFly', 'BirdChicken', 'BME', 'Car', 'CBF', 'Chinatown', 'ChlorineConcentration', 'CinCECGTorso', 'Computers', 'CricketX', 'CricketY', 'CricketZ', 'Crop', 'DiatomSizeReduction', 'DistalPhalanxOutlineAgeGroup', 'DodgerLoopDay', 'DodgerLoopGame', 'DodgerLoopWeekend', 'ECG5000', 'ECGFiveDays', 'ElectricDevices', 'EOGHorizontalSignal', 'EOGVerticalSignal', 'EthanolLevel', 'FaceAll', 'FaceFour', 'FacesUCR', 'FiftyWords', 'Fish', 'FreezerRegularTrain', 'FreezerSmallTrain', 'Fungi', 'GestureMidAirD1', 'GestureMidAirD2', 'GestureMidAirD3', 'GesturePebbleZ1',  'GesturePebbleZ2', 'GunPointAgeSpan', 'GunPointMaleVersusFemale', 'GunPointOldVersusYoung', 'Ham', 'Haptics', 'Herring', 'HouseTwenty', 'InlineSkate', 'InsectEPGRegularTrain', 'InsectEPGSmallTrain', 'LargeKitchenAppliances', 'Mallat', 'Meat', 'MedicalImages', 'MelbournePedestrian', 'MiddlePhalanxOutlineAgeGroup', 'MixedShapesRegularTrain', 'MixedShapesSmallTrain', 'MoteStrain', 'NonInvasiveFetalECGThorax1', 'NonInvasiveFetalECGThorax2', 'OliveOil', 'Phoneme', 'PickupGestureWiimoteZ', 'PigAirwayPressure', 'PigArtPressure', 'PigCVP', 'PLAID', 'Plane',  'PowerCons', 'ProximalPhalanxOutlineAgeGroup', 'RefrigerationDevices', 'Rock', 'ScreenType', 'SemgHandGenderCh2', 'SemgHandMovementCh2', 'SemgHandSubjectCh2', 'ShakeGestureWiimoteZ', 'ShapesAll', 'SmallKitchenAppliances', 'SmoothSubspace', 'SonyAIBORobotSurface1', 'SonyAIBORobotSurface2', 'StarLightCurves', 'Strawberry', 'SwedishLeaf', 'Symbols', 'SyntheticControl', 'TwoLeadECG', 'TwoPatterns', 'CharacterTrajectories', 'JapaneseVowels', 'SpokenArabicDigits', 'EigenWorms', 'ERing', 'FaceDetection', 'Libras', 'LSST', 'PenDigits', 'GunPoint', 'ItalyPowerDemand', 'OSULeaf', 'UMD', 'UWaveGestureLibraryAll', 'UWaveGestureLibraryX', 'UWaveGestureLibraryY', 'UWaveGestureLibraryZ', 'UnitTest', 'Wine', 'WordSynonyms', 'Worms', 'WormsTwoClass', 'Yoga'}:
         class LabelToInt(dict):
             def __missing__(self, key):
                 return int(key)-1
@@ -54,10 +54,22 @@ def ordinal_targets(dataset, y) -> list:
             def __missing__(self, key):
                 return int(float(key))-1
         converter = LabelToInt2()
-    elif dataset in {'ACSF1', 'ArrowHead'}:
+    elif dataset in {'ACSF1', 'ArrowHead', 'Coffee', 'DistalPhalanxOutlineCorrect', 'Earthquakes', 'HandOutlines', 'Lightning7', 'MiddlePhalanxOutlineCorrect', 'PhalangesOutlinesCorrect', 'ProximalPhalanxOutlineCorrect', 'ShapeletSim', 'ToeSegmentation1', 'ToeSegmentation2', 'Trace'}:
         class LabelToInt3(dict):
             def __missing__(self, key):
                 return int(key)
         converter = LabelToInt3()
+    elif dataset in {'DistalPhalanxTW', 'MiddlePhalanxTW', 'ProximalPhalanxTW'}:
+        class LabelToInt4(dict):
+            def __missing__(self, key):
+                return int(key)-3
+        converter = LabelToInt4()
+    elif dataset in {'ECG200', 'FordA', 'FordB', 'Lightning2', 'Wafer'}:
+        converter = {'-1': 0, '1': 1}
+    else:
+        class IntToInt(dict):
+            def __missing__(self, key):
+                return key
+        converter = IntToInt()
 
     return [converter[i] for i in y]

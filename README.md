@@ -1,6 +1,6 @@
 # MIHT: A Hoeffding Tree Algorithm for Time Series Classification using Multiple Instance Learning
 
-Associated repository with complementary materials to the manuscript *MIHT: A Hoeffding Tree Algorithm for Time Series Classification using Multiple Instance Learning* submitted to the 41st International Conference on Machine Learning (ICML). The following materials are included:
+Associated repository with complementary materials to the manuscript *MIHT: A Hoeffding Tree Algorithm for Time Series Classification using Multiple Instance Learning* accepted at 26th International Conference on Intelligent Data Engineering and Automated Learning, IDEAL 2025. The following materials are included:
 
 * Source code of the MIHT proposal.
 * Datasets used in the experimentation.
